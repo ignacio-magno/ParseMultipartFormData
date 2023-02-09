@@ -2,6 +2,7 @@ package parse_multipart_form_data
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
@@ -16,6 +17,15 @@ type BuilderMultipartFormData struct {
 }
 
 func NewBuilderMultipartFormDataFromEventApiGatewayRequest(e events.APIGatewayProxyRequest) *BuilderMultipartFormData {
+	if e.IsBase64Encoded {
+		un64, err := base64.StdEncoding.DecodeString(e.Body)
+		if err != nil {
+			panic(err)
+		}
+
+		e.Body = string(un64)
+	}
+
 	return &BuilderMultipartFormData{
 		Headers: e.Headers,
 		Body:    bytes.NewReader([]byte(e.Body)),
