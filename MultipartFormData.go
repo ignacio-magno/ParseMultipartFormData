@@ -1,4 +1,4 @@
-package MultipartFormData
+package parse_multipart_form_data
 
 import (
 	"bytes"
